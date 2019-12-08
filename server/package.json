@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "MyLaw conference planner",
+  "main": "app.js",
+  "scripts": {
+    "dev-start": "set NODE_ENV=development && nodemon --exec babel-node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf ./build && mkdir build",
+    "build": "npm run clean && babel ../server --out-dir build",
+    "start": "npm run build && node ./build/app.js",
+    "client": "cd .. && npm start --prefix client",
+    "dev": "concurrently \"npm run dev-start\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "Rasheed",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/runtime": "^7.7.5",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "json-server": "^0.15.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
+    "babel-loader": "^8.0.6",
+    "nodemon": "^2.0.1"
+  }
+}
