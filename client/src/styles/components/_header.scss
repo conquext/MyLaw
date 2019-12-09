@@ -1,0 +1,73 @@
+.c-header {
+  background: $off-blueblack;
+  color: white;
+  margin-bottom: $m-size;
+  padding: $m-size;
+  cursor: pointer;
+}
+
+.c-header2 {
+  font-size: $m-size !important;
+  margin: 0;
+  color: red;
+  // font-weight: 500;
+  padding-top: $s-size;
+}
+
+.c-header__title {
+  font-size: $l-size;
+  margin: 0;
+  animation: blink linear infinite 3s;
+  &:hover {
+    opacity: 0.8;
+    transition: all 90ms ease-out;
+    // transform: translate(50%, 50%);
+  }
+}
+
+.c-header__subtitle {
+  font-size: $m-size;
+  font-weight: 500;
+  padding-top: $s-size;
+  animation: blink linear infinite 4s;
+  margin: 0;
+}
+
+@media (min-width: $desktop-breakpoint) {
+  .c-header {
+    margin-bottom: $xl-size;
+  }
+}
+
+@keyframes blink {
+  78% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  79% {
+    color: #333;
+  }
+  80% {
+    text-shadow: none;
+  }
+  81% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  82% {
+    color: #333;
+    text-shadow: none;
+  }
+  83% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  92% {
+    color: #333;
+    text-shadow: none;
+  }
+  92.5% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+}
