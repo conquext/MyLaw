@@ -67,3 +67,25 @@
 .fade {
   opacity: 1;
 }
+
+.modal-body {
+  form {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+  }
+
+  .form-control {
+    margin-left: 1rem;
+    height: 3em;
+    min-width: fit-content;
+  }
+
+  .btn-secondary {
+    width: 40%;
+    margin: auto;
+  }
+}
+.modal-footer {
+  display: none;
+}

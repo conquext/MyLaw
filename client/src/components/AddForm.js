@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+import Validator from "validator";
 
 import {
   Button,
@@ -11,25 +13,28 @@ import {
 
 class AddForm extends React.Component {
   state = {
-    input: {},
+    input: {
+      topic: ""
+    },
     errors: {}
   };
 
   onChange = e => {
     let updatedInput = { ...this.state.input };
     updatedInput[e.target.name] = e.target.value;
-    this.setState({ input: updatedInput });
+    console.log("updatedinput", updatedInput);
+    this.setState({ input: updatedInput, errors: this.validate(updatedInput) });
   };
 
   validate = input => {
     const errors = {};
-    if (!Validator.isEmail(input.email)) errors.email = "Invalid email";
-    if (!input.password) errors.password = "Can't be blank";
+    if (!input.topic) errors.topic = "Can't be blank";
     return errors;
   };
 
   submitForm = e => {
     e.preventDefault();
+    console.log(e.target);
   };
 
   render() {
@@ -53,7 +58,7 @@ class AddForm extends React.Component {
           )}
         </FormGroup>
 
-        <Button>Submit</Button>
+        <Button onClick={this.submitForm}>Submit</Button>
       </Form>
     );
   }

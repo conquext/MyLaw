@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Container } from "react-bootstrap";
-import AddForm from "./AddForm";
+// import AddForm from "./AddForm";
 import EditForm from "./EditForm";
 import AddTalkForm from "./AddTalkForm";
 
 const ModalForm = props => {
-  let form = <AddForm addItemToState={props.addItemToState} />;
+  // let form = <AddForm addItemToState={props.addItemToState} />;
+  let form = "";
 
   if (props.form === "UpdateTalk") {
     form = <EditForm {...props} />;
   }
 
   if (props.form === "AddNewTalk") {
-    form = <AddTalkForm {...props} />;
+    form = <AddTalkForm {...props} addTalk={props.addTalk} />;
+  }
+
+  if (props.form === "AddNewAttendee") {
+    // form = <AddAttendeeForm {...props} />;
   }
 
   useEffect(() => {

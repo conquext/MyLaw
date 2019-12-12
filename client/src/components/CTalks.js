@@ -4,76 +4,21 @@ import axios from "axios";
 
 import CTalk from "./CTalk";
 import AddTalkModal from "./AddTalkModal";
-// import { TalksContext } from "../context";
+import { AppContext } from "../context";
 
 export class CTalks extends Component {
-  //   static contextType = TalksContext;
+  static contextType = AppContext;
   _isMounted = false;
 
   state = {
     talks: [],
-    loading: true,
-    addModalShow: false,
-    error: []
-  };
-
-  setShowModal = e => {
-    e.preventDefault();
-    this.setState({ addModalShow: true });
-  };
-
-  getTalk = slug => {
-    let tempTalks = [...this.state.talks];
-    const talk = tempTalks.find(talk => talk.slug === slug);
-    return talk;
-  };
-
-  getTalks = () => {
-    return [...this.state.talks];
-  };
-
-  getAttendee = slug => {
-    let tempAttendees = [...this.state.attendees];
-    const attendee = tempAttendees.find(attendee => attendee.slug === slug);
-    return attendee;
-  };
-
-  getAttendees = () => {
-    return [...this.state.attendees];
-  };
-
-  assignTalk = (talkId, attendeeId) => {
-    try {
-      axios
-        .patch(`/api/v1/talks/${talkId}`, {
-          speakerId: attendeeId
-        })
-        .then(res => res.data)
-        .then(talks => {
-          this.setState({ loading: false, talks });
-        });
-    } catch (error) {
-      this.setState({ error });
-    }
-  };
-
-  handleDelete = e => {
-    e.preventDefault();
-    console.log(e.target);
-
-    try {
-      axios
-        .delete(`/api/v1/talks/${e.target.talkId}`)
-        .then(res => res.data)
-        .then(talks => {
-          this.setState({ loading: false, talks });
-        });
-    } catch (error) {
-      this.setState({ error });
-    }
+    attendees: [],
+    loading: true
   };
 
   fetchTalks = () => {
+    this.setState({ loading: true });
+
     axios
       .get(`/api/v1/talks`)
       .then(res => res.data)
@@ -82,9 +27,47 @@ export class CTalks extends Component {
       });
   };
 
+  fetchAttendees = () => {
+    this.setState({ loading: true });
+    axios
+      .get(`/api/v1/attendees`)
+      .then(res => res.data)
+      .then(attendees => {
+        this._isMounted &&
+          this.setState({ loading: false, attendees: attendees.data });
+      });
+  };
+
+  addTalk = data => {
+    try {
+      axios
+        .post(`api/v1/talks/`, data)
+        .then(res => res.data)
+        .then(talks => {
+          this.setState({ loading: false, talks });
+        });
+    } catch (error) {
+      this.setState({ error });
+    }
+  };
+
+  deleteTalk = id => {
+    try {
+      axios
+        .delete(`/api/v1/talks/${id}`)
+        .then(res => res.data)
+        .then(talks => {
+          this.setState({ loading: false, talks });
+        });
+    } catch (error) {
+      this.setState({ error });
+    }
+  };
+
   componentDidMount() {
     this._isMounted = true;
     this._isMounted && this.fetchTalks();
+    this._isMounted && this.fetchAttendees();
   }
 
   componentWillUnmount() {
@@ -92,9 +75,16 @@ export class CTalks extends Component {
   }
 
   render() {
-    const { talks } = this.state;
+    const {
+      setShowModal,
+      deleteTalk,
+      addModalClose,
+      addModalShow,
+      getSpeaker,
+      fetchTalks
+    } = this.context;
 
-    let addModalClose = () => this.setState({ addModalShow: false });
+    const { talks, attendees } = this.state;
 
     return (
       <Fragment>
@@ -102,19 +92,19 @@ export class CTalks extends Component {
           <div className="panel-heading display-4">
             <h3 className="panel-title">
               {" "}
-              Talks
+              Talks [{talks.length || 0}]
               <span className="pull-right clearfix move-right">
                 <i
                   className="glyphicon glyphicon-search glypcon"
-                  onClick={this.setShowModal}
+                  onClick={setShowModal}
                 ></i>
                 <i
                   className="glyphicon glyphicon-plus-sign glypcon white-link"
-                  onClick={this.setShowModal}
+                  onClick={setShowModal}
                 ></i>
                 <i
                   className="glyphicon glyphicon-trash glypcon"
-                  onClick={this.handleDelete}
+                  onClick={deleteTalk}
                 ></i>
               </span>
             </h3>
@@ -122,18 +112,26 @@ export class CTalks extends Component {
           <div className="panel-body">
             <Fragment>
               {talks.length >= 1 ? (
-                talks.map(talk => <CTalk key={talk.id} talk={talk} />)
+                talks.map(talk => (
+                  <CTalk
+                    key={talk.id}
+                    talk={talk}
+                    attendees={attendees}
+                    delete={deleteTalk}
+                  />
+                ))
               ) : (
                 <div className="center-block text-center">
                   <p>No talk data to display, Add new talk to view Listing</p>
-                  <Button onClick={this.setShowModal}>Add Talk Data</Button>
+                  <Button onClick={setShowModal}>Add Talk Data</Button>
                 </div>
               )}
             </Fragment>
 
             <AddTalkModal
-              show={this.state.addModalShow}
+              show={addModalShow}
               onHide={addModalClose}
+              addTalk={addTalk}
             />
           </div>
         </div>

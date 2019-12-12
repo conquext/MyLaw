@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-const TalksContext = React.createContext();
+const AppContext = React.createContext();
 
-export default class TalksProvider extends Component {
+export default class AppProvider extends Component {
   state = {
     talks: [],
     attendees: [],
@@ -31,6 +31,27 @@ export default class TalksProvider extends Component {
     return [...this.state.attendees];
   };
 
+  getSpeaker = speakerId => {
+    let tempAttendees = [...this.state.attendees];
+
+    const speaker = tempAttendees.find(attendee => attendee.id == speakerId);
+    return speaker;
+  };
+
+  deleteTalk = id => {
+    console.log("id", id);
+    try {
+      axios
+        .delete(`/api/v1/talks/${id}`)
+        .then(res => res.data)
+        .then(talks => {
+          this.setState({ loading: false, talks });
+        });
+    } catch (error) {
+      this.setState({ error });
+    }
+  };
+
   assignTalk = (talkId, attendeeId) => {
     axios
       .patch(`/api/v1/talks/${talkId}`, {
@@ -42,69 +63,93 @@ export default class TalksProvider extends Component {
       });
   };
 
-  //   handleChange = event => {
-  //     const target = event.target;
-  //     const value = event.type === "checkbox" ? target.checked : target.value;
-  //     const name = event.target.name;
-  //     this.setState(
-  //       {
-  //         [name]: value
-  //       },
-  //       this.filterRooms
-  //     );
-  //   };
-  fetchTalks = () => {
-    axios
-      .get(`/api/v1/talks`)
-      .then(res => res.data)
-      .then(talks => {
-        this.setState({ loading: false, talks });
-      });
+  fetchTalks = async () => {
+    let res = await axios.get(`/api/v1/talks`);
+    let record = res.data;
+    let talks = record.data;
+    return talks;
   };
 
-  fetchAttendees = () => {
-    axios
-      .get(`/api/v1/attendees`)
-      .then(res => res.data)
-      .then(attendees => {
-        this.setState({ loading: false, attendees });
-      });
+  fetchAttendees = async () => {
+    let res = await axios.get(`/api/v1/attendees`);
+    let record = res.data;
+    let attendees = record.data;
+    // this.setState({ attendees });
+    return attendees;
   };
 
-  componentDidMount() {
-    console.log("shit");
-    this.fetchTalks();
-    this.fetchAttendees();
+  setShowModal = e => {
+    e.preventDefault();
+    this.setState({ addModalShow: true });
+  };
+
+  addModalClose = () => this.setState({ addModalShow: false });
+
+  async UNSAFE_componentWillMount() {
+    console.log("will mount", this.state);
+
+    // await this.setState({ loading: true });
+    // await (() => {
+    //   this.fetchData();
+    // })();
+    // await this.setState({ loading: false });
+    //   if (this._isMounted) {
+    //     this.fetchAttendees();
+    //   }
   }
+
+  async componentDidMount() {
+    this._isMounted = true;
+    this.setState({ loading: true });
+
+    console.log("data", this.fetchTalks(), this.fetchAttendees());
+    this.setState({
+      loading: false,
+      talks: this.fetchTalks(),
+      attendees: this.fetchAttendees()
+    });
+
+    console.log("did mount state", this.state);
+  }
+
+  //   componentWillUnmount() {
+  //     this._isMounted = false;
+  //   }
 
   render() {
     return (
-      <TalksContext.Provider
+      <AppContext.Provider
         value={{
           ...this.state,
           getTalk: this.getTalk,
           getTalks: this.getTalks,
           getAttendee: this.getAttendee,
           getAttendees: this.getAttendees,
-          assignTalk: this.assignTalk
+          assignTalk: this.assignTalk,
+          deleteTalk: this.deleteTalk,
+          setShowModal: this.setShowModal,
+          addModalClose: this.addModalClose,
+          getSpeaker: this.getSpeaker,
+          fetchTalks: this.fetchTalks,
+          fetchAttendees: this.fetchAttendees
         }}
       >
         {this.props.children}
-      </TalksContext.Provider>
+      </AppContext.Provider>
     );
   }
 }
 
-const TalksConsumer = TalksContext.Consumer;
+const AppConsumer = AppContext.Consumer;
 
-export function withTalksConsumer(Component) {
+export function withAppConsumer(Component) {
   return function ConsumerWrapper(props) {
     return (
-      <TalksConsumer>
+      <AppConsumer>
         {value => <Component {...props} context={value} />}
-      </TalksConsumer>
+      </AppConsumer>
     );
   };
 }
 
-export { TalksProvider, TalksConsumer, TalksContext };
+export { AppProvider, AppConsumer, AppContext };

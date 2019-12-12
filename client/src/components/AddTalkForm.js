@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+import Validator from "validator";
 
 import {
   Button,
@@ -6,27 +8,46 @@ import {
   FormGroup,
   FormFeedback,
   Label,
-  Input,
-  Select
+  Input
 } from "reactstrap";
 
 class AddForm extends React.Component {
   state = {
     input: {
-      topic: "",
-      speaker: ""
+      topic: ""
     },
+    loading: true,
     errors: {}
   };
 
   onChange = e => {
     let updatedInput = { ...this.state.input };
     updatedInput[e.target.name] = e.target.value;
-    this.setState({ input: updatedInput });
+    this.setState({ input: updatedInput, errors: this.validate(updatedInput) });
+    console.log("updatedinput", this.state);
+  };
+
+  validate = input => {
+    const errors = {};
+    if (!input.topic) errors.topic = "Can't be blank";
+    return errors;
   };
 
   submitForm = e => {
+    console.log(e);
     e.preventDefault();
+    // try {
+    //   axios
+    //     .post(`/api/v1/talks/`, {
+    //       topic: this.state.topic
+    //     })
+    //     .then(res => res.data)
+    //     .then(talks => {
+    //       this.setState({ loading: false });
+    //     });
+    // } catch (error) {
+    //   this.setState({ error });
+    // }
   };
 
   render() {
@@ -46,21 +67,9 @@ class AddForm extends React.Component {
             }
           />
           {errors.topic && (
-            <div classtopic="invalid-feedback">{errors.name}</div>
+            <div className="invalid-feedback">{errors.topic}</div>
           )}
         </FormGroup>
-        {/* <FormGroup>
-          <Label for="speaker">Speaker</Label>
-          <Select
-            type="text"
-            name="speaker"
-            id="speaker"
-            onChange={this.onChange}
-            value={
-              this.state.input.speaker === null ? "" : this.state.input.speaker
-            }
-          />
-        </FormGroup> */}
 
         <Button>Submit</Button>
       </Form>
