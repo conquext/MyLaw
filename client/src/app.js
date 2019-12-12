@@ -13,4 +13,5 @@ axios.defaults.baseURL = "http://localhost:2001";
 
 ReactDOM.render(
 <AppProvider>
-<Boilerplate /></AppProvider>, document.getElementById("app"));
+    <Boilerplate />
+</AppProvider>, document.getElementById("app"));
