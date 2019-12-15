@@ -5,7 +5,7 @@
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack -p",
     "dev-server": "webpack-dev-server",
     "start": "npm run build"
   },
@@ -58,6 +58,6 @@
   "bugs": {
     "url": "https://github.com/conquext/react-with-webpack-sass/issues"
   },
-  "proxy": "http://localhost:2001",
+  "proxy": "http://localhost:2003",
   "homepage": "https://github.com/conquext/react-with-webpack-sass/#readme"
 }

@@ -2,7 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
 import { AppContext } from "../context";
 
-import EditTalkModal from "./EditTalkModal";
+import asyncComponent from "../hoc/asyncComponent";
+
+const AsyncModal = asyncComponent(() => {
+  return import("./EditTalkModal");
+});
 
 const CTalk = props => {
   const { id, topic, speakerId = null } = props.talk;
@@ -75,7 +79,7 @@ const CTalk = props => {
             </div>
           </div>
           {editModalShow ? (
-            <EditTalkModal
+            <AsyncModal
               show={editModalShow}
               onHide={hideModal}
               assigntalk={assignTalk}

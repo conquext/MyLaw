@@ -1,22 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Modal, Button, Container } from "react-bootstrap";
-import EditTalkForm from "./EditTalkForm";
-import AddTalkForm from "./AddTalkForm";
-import AddAttendeeForm from "./AddAttendeeForm";
+import asyncComponent from "../hoc/asyncComponent";
+
+const AsyncAddTalkForm = asyncComponent(() => {
+  return import("./AddTalkForm");
+});
+
+const AsyncEditTalkForm = asyncComponent(() => {
+  return import("./EditTalkForm");
+});
+
+const AsyncAddAttendeeForm = asyncComponent(() => {
+  return import("./AddAttendeeForm");
+});
 
 const ModalForm = props => {
   let form = "";
 
   if (props.form === "UpdateTalk") {
-    form = <EditTalkForm {...props} />;
+    form = <AsyncEditTalkForm {...props} />;
   }
 
   if (props.form === "AddNewTalk") {
-    form = <AddTalkForm {...props} addtalk={props.addtalk} />;
+    form = <AsyncAddTalkForm {...props} addtalk={props.addtalk} />;
   }
 
   if (props.form === "AddNewAttendee") {
-    form = <AddAttendeeForm {...props} />;
+    form = <AsyncAddAttendeeForm {...props} />;
   }
 
   return (

@@ -3,9 +3,13 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import CAttendee from "./CAttendee";
 import { AppContext } from "../context";
-import AddAttendeeModal from "./AddAttendeeModal";
+import asyncComponent from "../hoc/asyncComponent";
 
 import { Segment, Card } from "semantic-ui-react";
+
+const AsyncModal = asyncComponent(() => {
+  return import("./AddAttendeeModal");
+});
 
 const CAttendees = props => {
   const context = useContext(AppContext);
@@ -60,7 +64,7 @@ const CAttendees = props => {
         </Card.Group>
       </Segment.Group>
       {addAttendeeModalShow ? (
-        <AddAttendeeModal
+        <AsyncModal
           show={addAttendeeModalShow}
           onHide={hideModal}
           addattendee={addAttendee}

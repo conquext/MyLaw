@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import { Button } from "react-bootstrap";
 import CTalk from "./CTalk";
-import AddTalkModal from "./AddTalkModal";
 import { AppContext } from "../context";
+import asyncComponent from "../hoc/asyncComponent";
+
+const AsyncModal = asyncComponent(() => {
+  return import("./AddTalkModal");
+});
 
 const CTalks = () => {
   const context = useContext(AppContext);
@@ -66,7 +70,7 @@ const CTalks = () => {
             </>
           )}
           {addModalShow ? (
-            <AddTalkModal
+            <AsyncModal
               show={addModalShow}
               onHide={addModalClose}
               addtalk={addTalk}
