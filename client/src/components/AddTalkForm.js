@@ -1,6 +1,5 @@
 import React from "react";
-import axios from "axios";
-import Validator from "validator";
+import { AppContext } from "../context";
 
 import {
   Button,
@@ -12,6 +11,8 @@ import {
 } from "reactstrap";
 
 class AddForm extends React.Component {
+  static contextType = AppContext;
+
   state = {
     input: {
       topic: ""
@@ -24,7 +25,6 @@ class AddForm extends React.Component {
     let updatedInput = { ...this.state.input };
     updatedInput[e.target.name] = e.target.value;
     this.setState({ input: updatedInput, errors: this.validate(updatedInput) });
-    console.log("updatedinput", this.state);
   };
 
   validate = input => {
@@ -34,24 +34,14 @@ class AddForm extends React.Component {
   };
 
   submitForm = e => {
-    console.log(e);
     e.preventDefault();
-    // try {
-    //   axios
-    //     .post(`/api/v1/talks/`, {
-    //       topic: this.state.topic
-    //     })
-    //     .then(res => res.data)
-    //     .then(talks => {
-    //       this.setState({ loading: false });
-    //     });
-    // } catch (error) {
-    //   this.setState({ error });
-    // }
+    this.props.addtalk(this.state.input);
+    this.context.addModalClose();
   };
 
   render() {
     const { errors } = this.state;
+    const { addModalClose } = this.context;
 
     return (
       <Form onSubmit={this.submitForm}>

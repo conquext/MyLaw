@@ -8,7 +8,8 @@ const EditTalkModal = props => {
       form="UpdateTalk"
       show={props.show}
       onHide={props.onHide}
-      updatedobject={props.updatedObject}
+      assigntalk={props.assigntalk}
+      updatedobject={props.updatedobject}
     />
   );
 };

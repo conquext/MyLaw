@@ -8,7 +8,7 @@ const AddTalkModal = props => {
       form="AddNewTalk"
       show={props.show}
       onHide={props.onHide}
-      addTalk={props.addTalk}
+      addtalk={props.addtalk}
     />
   );
 };

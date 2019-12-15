@@ -64,6 +64,14 @@
   color: white;
 }
 
+.blue-link {
+  color: blue;
+}
+
+.blue-link:hover {
+  color: dodgerblue;
+}
+
 .fade {
   opacity: 1;
 }
@@ -82,10 +90,75 @@
   }
 
   .btn-secondary {
-    width: 40%;
+    // width: 40%;
     margin: auto;
   }
 }
 .modal-footer {
   display: none;
+}
+
+.form-group {
+  display: flex;
+}
+
+.dropdown-toggle {
+  background: white !important;
+  color: #6c757d !important;
+}
+
+.form-group .dropdown {
+  margin-left: 1rem;
+  height: 3rem;
+  min-width: fit-content;
+  cursor: pointer;
+}
+
+.boilerplate {
+  position: relative;
+}
+
+.ui .footer {
+  margin-top: 0.5rem !important;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer {
+  margin-top: 0.5rem !important;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.c-footer {
+  .container {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  // margin-left: $xl-size;
+}
+
+.card-body {
+  .panel-heading {
+    position: relative;
+    // display: inline;
+    width: 100%;
+
+    .text-cut {
+      max-width: 80%;
+      display: inline-flex;
+      margin-right: 5px;
+      text-overflow: hidden;
+    }
+    .pull-right {
+      position: absolute;
+      right: -5px;
+      padding-right: 10px;
+      display: inline-flex;
+      vertical-align: middle;
+    }
+  }
 }

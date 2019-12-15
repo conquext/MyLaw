@@ -4,11 +4,14 @@ import axios from "axios";
 const AppContext = React.createContext();
 
 export default class AppProvider extends Component {
+  static _isMounted = false;
   state = {
     talks: [],
     attendees: [],
     loading: true,
-    addModalShow: false
+    addModalShow: false,
+    addAttendeeModalShow: false,
+    editModalShow: false
   };
 
   getTalk = slug => {
@@ -38,83 +41,136 @@ export default class AppProvider extends Component {
     return speaker;
   };
 
-  deleteTalk = id => {
-    console.log("id", id);
+  assignTalk = (talkId, attendeeId) => {
     try {
       axios
-        .delete(`/api/v1/talks/${id}`)
+        .patch(`/api/v1/talks/${talkId}`, {
+          speakerId: attendeeId
+        })
+        .then(res => res.data)
+        .then(() => {
+          this.fetchTalks();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchTalks = () => {
+    try {
+      this.setState({ loading: true });
+
+      axios
+        .get(`/api/v1/talks`)
+        .then(res => (res.data ? res.data : ""))
+        .then(talks => {
+          if (talks.data) {
+            this._isMounted &&
+              this.setState({ loading: false, talks: talks.data });
+          } else
+            this._isMounted && this.setState({ loading: false, talks: "" });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchAttendees = () => {
+    try {
+      this.setState({ loading: true });
+      axios
+        .get(`/api/v1/attendees`)
+        .then(res => res.data)
+        .then(attendees => {
+          this._isMounted &&
+            this.setState({ loading: false, attendees: attendees.data });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  addTalk = data => {
+    try {
+      axios
+        .post(`api/v1/talks/`, data)
         .then(res => res.data)
         .then(talks => {
-          this.setState({ loading: false, talks });
+          this.setState({ loading: false, talks: talks.data });
         });
     } catch (error) {
       this.setState({ error });
     }
   };
 
-  assignTalk = (talkId, attendeeId) => {
-    axios
-      .patch(`/api/v1/talks/${talkId}`, {
-        speakerId: attendeeId
-      })
-      .then(res => res.data)
-      .then(talks => {
-        this.setState({ loading: false, talks });
-      });
+  addAttendee = data => {
+    try {
+      axios
+        .post(`api/v1/attendees/`, data)
+        .then(res => res.data)
+        .then(attendees => {
+          this.setState({ loading: false, attendees: attendees.data });
+        });
+    } catch (error) {
+      this.setState({ error });
+    }
   };
 
-  fetchTalks = async () => {
-    let res = await axios.get(`/api/v1/talks`);
-    let record = res.data;
-    let talks = record.data;
-    return talks;
+  deleteTalk = id => {
+    try {
+      axios
+        .delete(`/api/v1/talks/${id}`)
+        .then(res => (res.data ? res.data : ""))
+        .then(() => {
+          this.fetchTalks();
+        });
+    } catch (error) {
+      this.setState({ error });
+    }
   };
 
-  fetchAttendees = async () => {
-    let res = await axios.get(`/api/v1/attendees`);
-    let record = res.data;
-    let attendees = record.data;
-    // this.setState({ attendees });
-    return attendees;
+  deleteAttendee = id => {
+    try {
+      axios
+        .delete(`/api/v1/attendees/${id}`)
+        .then(res => (res.data ? res.data : ""))
+        .then(() => {
+          this.fetchAttendees();
+        });
+    } catch (error) {
+      this.setState({ error });
+    }
   };
 
-  setShowModal = e => {
+  setShowAddModal = e => {
     e.preventDefault();
     this.setState({ addModalShow: true });
   };
 
+  setShowAddAttendeeModal = e => {
+    e.preventDefault();
+    this.setState({ addAttendeeModalShow: true });
+  };
+
+  setShowEditModal = e => {
+    e.preventDefault();
+    this.setState({ editModalShow: true });
+  };
+
   addModalClose = () => this.setState({ addModalShow: false });
+  editModalClose = () => this.setState({ editModalShow: false });
+  addAttendeeModalClose = () => this.setState({ addAttendeeModalShow: false });
 
-  async UNSAFE_componentWillMount() {
-    console.log("will mount", this.state);
-
-    // await this.setState({ loading: true });
-    // await (() => {
-    //   this.fetchData();
-    // })();
-    // await this.setState({ loading: false });
-    //   if (this._isMounted) {
-    //     this.fetchAttendees();
-    //   }
-  }
-
-  async componentDidMount() {
+  componentDidMount() {
     this._isMounted = true;
-    this.setState({ loading: true });
-
-    console.log("data", this.fetchTalks(), this.fetchAttendees());
-    this.setState({
-      loading: false,
-      talks: this.fetchTalks(),
-      attendees: this.fetchAttendees()
-    });
-
-    console.log("did mount state", this.state);
+    this._isMounted && this.fetchTalks();
+    this._isMounted && this.fetchAttendees();
+    this.setState({ loading: false });
   }
 
-  //   componentWillUnmount() {
-  //     this._isMounted = false;
-  //   }
+  componentWillUnMount() {
+    this._isMounted = false;
+  }
 
   render() {
     return (
@@ -125,10 +181,18 @@ export default class AppProvider extends Component {
           getTalks: this.getTalks,
           getAttendee: this.getAttendee,
           getAttendees: this.getAttendees,
+          addTalk: this.addTalk,
+          addAttendee: this.addAttendee,
           assignTalk: this.assignTalk,
           deleteTalk: this.deleteTalk,
-          setShowModal: this.setShowModal,
+          deleteAttendee: this.deleteAttendee,
+          setShowEditModal: this.setShowEditModal,
+          setShowAddModal: this.setShowAddModal,
           addModalClose: this.addModalClose,
+          addAttendeeModalClose: this.addAttendeeModalClose,
+          addAttendeeModalShow: this.addAttendeeModalShow,
+          setShowAddAttendeeModal: this.setShowAddAttendeeModal,
+          editModalClose: this.editModalClose,
           getSpeaker: this.getSpeaker,
           fetchTalks: this.fetchTalks,
           fetchAttendees: this.fetchAttendees
