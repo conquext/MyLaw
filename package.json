@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node server/build/app.js",
-    "heroku-postbuild": "cd client && npm install && cd .. && cd server && npm install && npm run start"
+    "heroku-postbuild": "npm install --prefix client && npm install --prefix server && npm start --prefix server"
   },
   "keywords": [],
   "author": "Rasheed",
