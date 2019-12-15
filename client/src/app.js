@@ -9,7 +9,10 @@ import { AppProvider } from "./context";
 
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:2001";
+axios.defaults.baseURL =
+  NODE_ENV === "test"
+    ? "https://localhost:2001"
+    : "https://amona1.herokuapp.com";
 
 ReactDOM.render(
   <AppProvider>
