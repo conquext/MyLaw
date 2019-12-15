@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf ./build && mkdir build",
     "build": "npm run clean && babel ../server/src --out-dir build",
+    "start-server": "npm run build && node ./build/app.js",
     "start": "concurrently \"npm run build && node ./build/app.js\" \"npm run client\"",
     "client": "cd .. && npm start --prefix client",
     "dev": "concurrently \"npm run dev-start\" \"npm run client\""
