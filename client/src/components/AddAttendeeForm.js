@@ -22,12 +22,6 @@ class AddAttendeeForm extends React.Component {
     errors: {}
   };
 
-  // validate = (e, input) => {
-  //   const errors = {};
-  //   if (!input.attendee) errors[e.target.name] = "Can't be blank";
-  //   return errors;
-  // };
-
   onChange = e => {
     let updatedInput = { ...this.state.input };
     updatedInput[e.target.name] = e.target.value;

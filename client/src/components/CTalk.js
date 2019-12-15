@@ -48,8 +48,6 @@ const CTalk = props => {
 
   return (
     <div className="card-body">
-      {/* <div className="row"> */}
-      {/* <div className="col-md-12"> */}{" "}
       <div className="panel panel-danger">
         <div className="panel-heading">
           <span className="text-cut mb-2">{topic}</span>
@@ -90,8 +88,6 @@ const CTalk = props => {
           )}
         </div>
       </div>
-      {/* </div> */}
-      {/* </div> */}
     </div>
   );
 };
