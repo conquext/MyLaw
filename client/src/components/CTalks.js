@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useContext, Fragment } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
-import CTalk from "./CTalk";
 import { AppContext } from "../context";
 import asyncComponent from "../hoc/asyncComponent";
 
 const AsyncModal = asyncComponent(() => {
   return import("./AddTalkModal");
+});
+
+const AsyncCTalk = asyncComponent(() => {
+  return import("./CTalk");
 });
 
 const CTalks = () => {
@@ -29,7 +32,7 @@ const CTalks = () => {
   } = context;
 
   return (
-    <Fragment>
+    <>
       <div className="panel panel-primary">
         <div className="panel-heading display-4">
           <h3 className="panel-title">
@@ -45,16 +48,16 @@ const CTalks = () => {
         </div>
         <div className="panel-body">
           {loading ? (
-            <Fragment>
+            <>
               <div>
                 <p>Loading...</p>
               </div>
-            </Fragment>
+            </>
           ) : (
             <>
               {talks.length >= 1 ? (
                 talks.map(talk => (
-                  <CTalk
+                  <AsyncCTalk
                     key={talk.id}
                     talk={talk}
                     attendees={attendees}
@@ -80,7 +83,7 @@ const CTalks = () => {
           )}
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

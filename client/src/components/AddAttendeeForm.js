@@ -1,14 +1,7 @@
 import React from "react";
 import { AppContext } from "../context";
 
-import {
-  Button,
-  Form,
-  FormGroup,
-  FormFeedback,
-  Label,
-  Input
-} from "reactstrap";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 
 class AddAttendeeForm extends React.Component {
   static contextType = AppContext;

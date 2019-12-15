@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { Button } from "react-bootstrap";
-import CAttendee from "./CAttendee";
 import { AppContext } from "../context";
 import asyncComponent from "../hoc/asyncComponent";
 
@@ -9,6 +7,10 @@ import { Segment, Card } from "semantic-ui-react";
 
 const AsyncModal = asyncComponent(() => {
   return import("./AddAttendeeModal");
+});
+
+const AsyncCAttendee = asyncComponent(() => {
+  return import("./CAttendee");
 });
 
 const CAttendees = props => {
@@ -45,7 +47,7 @@ const CAttendees = props => {
         <Card.Group centered itemsPerRow={2}>
           {attendees.length >= 1 ? (
             attendees.map(attendee => (
-              <CAttendee
+              <AsyncCAttendee
                 key={attendee.id}
                 attendee={attendee}
                 delete={deleteAttendee}
