@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "MyLaw conference planner",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server/build/app.js",
+    "heroku-postbuild": "cd client && npm install && cd .. && cd server && npm install && npm run start"
+  },
+  "keywords": [],
+  "author": "Rasheed",
+  "license": "ISC",
+  "proxy": "http://localhost:2001"
+}
