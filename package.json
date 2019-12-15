@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node server/build/app.js",
-    "heroku-postbuild": "npm install --prefix server && npm start-server --prefix server",
+    "heroku-postbuild": "npm install --prefix server && npm run start-server --prefix server",
     "dev": "npm run dev --prefix server"
   },
   "keywords": [],
