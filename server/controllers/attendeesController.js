@@ -4,6 +4,10 @@ import SearchHelper from "../helpers/search";
 
 const { errorResponse, successResponse } = Response;
 
+const returnActualData = data => {
+  return data.filter(datum => !datum.deleted);
+};
+
 /**
  * Attendees representing the Attendees controller
  * @class AttendeesController
@@ -37,7 +41,7 @@ class AttendeesController {
         res,
         200,
         "New attendee added successfully",
-        attendees
+        returnActualData(attendees)
       );
     } catch (error) {
       return errorResponse(res, 500, [error]);
@@ -85,8 +89,14 @@ class AttendeesController {
    */
   static async getAttendees(req, res) {
     try {
-      attendees.length > 0
-        ? successResponse(res, 200, "Attendees Record", attendees)
+      const attendeesFound = [];
+      attendees.map(attendee => {
+        if (!attendee.deleted) {
+          attendeesFound.push(attendee);
+        }
+      });
+      attendeesFound.length > 0
+        ? successResponse(res, 200, "Attendees Record", attendeesFound)
         : errorResponse(res, 404, "No attendees found");
     } catch (error) {
       return errorResponse(res, 500, [error]);
@@ -104,6 +114,33 @@ class AttendeesController {
   static async addAttendeesToTalk(req, res) {
     try {
     } catch (error) {}
+  }
+
+  /**
+   * Remove a talk
+   * Route: DELETE: api/v1/attendees/:id
+   * @param {object} req - HTTP Request object
+   * @param {object} res - HTTP Response object
+   * @return {res} res - HTTP Response object
+   * @memberof AttendeeController
+   */
+  static async removeAttendees(req, res) {
+    try {
+      const thisId = parseInt(req.params.id, 10);
+
+      const attendeeFound = attendees.filter(
+        attendee => !attendee.deleted && attendee.id === thisId
+      );
+
+      if (Object.keys(attendeeFound).length === 0) {
+        return errorResponse(res, 404, "No attendee data found");
+      }
+      attendeeFound[0].deleted = true;
+
+      return successResponse(res, 200, "Attendee deleted successfully");
+    } catch (error) {
+      return errorResponse(res, 500, [error]);
+    }
   }
 }
 export default AttendeesController;
