@@ -4,8 +4,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 
 var _express = _interopRequireDefault(require("express"));
 
-var _jsonServer = _interopRequireDefault(require("json-server"));
-
 var _bodyParser = _interopRequireDefault(require("body-parser"));
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
@@ -28,7 +26,8 @@ app.use(function (req, res, next) {
   next();
 });
 (0, _index["default"])(app);
-app.use("/api", _jsonServer["default"].defaults(), _jsonServer["default"].router("db.json"));
+console.log("dir", __dirname + "../../client/dist");
+app.use(_express["default"]["static"](__dirname + "../../client/dist"));
 app.get("/*", function (req, res) {//   res.sendFile(path.join(__dirname, "index.html"));
 });
 var PORT = process.env.PORT || 2000;

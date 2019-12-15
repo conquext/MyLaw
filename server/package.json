@@ -4,7 +4,7 @@
   "description": "MyLaw conference planner",
   "main": "app.js",
   "scripts": {
-    "dev-start": "set NODE_ENV=development && nodemon --exec babel-node app.js",
+    "dev-start": "set NODE_ENV=development && nodemon --exec babel-node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf ./build && mkdir build",
     "build": "npm run clean && babel ../server/src --out-dir build",

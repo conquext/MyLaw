@@ -1,9 +1,9 @@
 import express from "express";
-import jsonServer from "json-server";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 import routes from "./routes/index";
+import path from "path";
 
 dotenv.config();
 const app = express();
@@ -23,10 +23,10 @@ app.use((req, res, next) => {
 
 routes(app);
 
-app.use("/api", jsonServer.defaults(), jsonServer.router("db.json"));
+app.use(express.static(path.resolve(__dirname, "../../client/public")));
 
 app.get("/*", (req, res) => {
-  //   res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.resolve(__dirname, "../../client/public/index.html"));
 });
 
 const PORT = process.env.PORT || 2000;
